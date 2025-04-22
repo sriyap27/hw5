@@ -16,7 +16,7 @@ using namespace std;
 
 // Add prototypes of helper functions here
 // curr --> curr string we've built, floating--> available yellow chars, in-->fixed letters, place-->where we are in the string, results-->curr results set to be returned, dict-->same dict from other
-void helper(string curr, unordered_map<char, int>& floating, int floating_needed, const string& in, int place, set<string>& results, const set<string>& dict);
+void helper(string& curr, unordered_map<char, int>& floating, int floating_needed, const string& in, int place, set<string>& results, const set<string>& dict);
 
 // Definition of primary wordle function
 std::set<std::string> wordle(
@@ -36,7 +36,7 @@ std::set<std::string> wordle(
 }
 
 // Define any helper functions here
-void helper(string curr, unordered_map<char, int>& floating, int floating_needed, const string& in, int place, set<string>& results, const set<string>& dict) {
+void helper(string& curr, unordered_map<char, int>& floating, int floating_needed, const string& in, int place, set<string>& results, const set<string>& dict) {
   // after we're done recursively building, checking if it is a valid word
   if (place == in.size()) {
     if (floating_needed == 0 && dict.find(curr) != dict.end()) {
@@ -45,7 +45,11 @@ void helper(string curr, unordered_map<char, int>& floating, int floating_needed
     }
     return;
   }
-  if (floating_needed > (in.size() - place)) {
+  int dashes = 0;
+  for (int i = place; i < in.size(); i++) {
+    if (in[i] == '-') dashes++;
+  }
+  if (floating_needed > dashes) {
     return;
   }
   // if the letter is already found/fixed
